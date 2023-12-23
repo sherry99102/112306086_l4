@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll Statistics</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            width: 50px; 
+            height: 50px; 
+            margin: 5px;
+        }
+
+        .dice-row {
+            display: flex;
+            justify-content: flex-start; 
+            align-items: center;
+        }
+
+        .dice-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    function rollDice(numRolls) {
+        var rolls = [];
+        for (var i = 0; i < numRolls; i++) {
+            rolls.push(Math.floor(Math.random() * 6) + 1);
+        }
+        return rolls;
+    }
+
+    function calculateProbability(rolls) {
+        var totalRolls = rolls.length;
+        var counts = {};
+        for (var i = 0; i < totalRolls; i++) {
+            var face = rolls[i];
+            counts[face] = (counts[face] || 0) + 1;
+        }
+
+        var probability = {};
+        for (var face in counts) {
+            probability[face] = counts[face] / totalRolls;
+        }
+
+        return probability;
+    }
+
+    function displayStatistics(probability) {
+        var table = document.createElement("table");
+        var headerRow = table.insertRow(0);
+        var headerCell1 = headerRow.insertCell(0);
+        var headerCell2 = headerRow.insertCell(1);
+        headerCell1.innerHTML = "Face";
+        headerCell2.innerHTML = "Probability";
+
+        for (var face in probability) {
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = face;
+            cell2.innerHTML = probability[face].toFixed(4);
+        }
+
+        document.body.appendChild(table);
+    }
+
+    function rollAndDisplay() {
+        var numRolls = 12;
+        var rolls = rollDice(numRolls);
+        displayDice(rolls);
+        var probability = calculateProbability(rolls);
+        displayStatistics(probability);
+    }
+
+    function displayDice(rolls) {
+        var diceContainer = document.getElementById("dice-container");
+        diceContainer.innerHTML = "";
+
+        var diceRow1 = document.createElement("div");
+        diceRow1.className = "dice-row";
+        var diceRow2 = document.createElement("div");
+        diceRow2.className = "dice-row";
+
+        for (var i = 0; i < rolls.length; i++) {
+            var img = document.createElement("img");
+            img.src = "C:\\Users\\user\\OneDrive\\桌面\\die" + rolls[i] + ".png"; 
+            img.alt = "Face " + rolls[i];
+
+            if (i < 6) {
+                diceRow1.appendChild(img);
+            } else {
+                diceRow2.appendChild(img);
+            }
+        }
+
+        // Append rows to the dice container
+        diceContainer.appendChild(diceRow1);
+        diceContainer.appendChild(diceRow2);
+    }
+</script>
+
+<div id="dice-container" class="dice-container"></div>
+
+<button onclick="rollAndDisplay()">Rolling Dice</button>
+
+</body>
+</html>
